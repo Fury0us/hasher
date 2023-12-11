@@ -4,4 +4,5 @@ Shell Script that takes advantage of a few different encryption algorithms to en
 git clone https://github/Fury0us/hasher
 # running
 cd hasher
+#
 bash hasher.sh
