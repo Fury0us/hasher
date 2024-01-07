@@ -26,7 +26,7 @@ echo ""
 
 COLUMNS=12
 PS3=("#main: ")
-hasher=("-AES" "-Arcfour" "-ARIA" "-RSA" "-Rijndael" "-Serpent" "-Twofish" "-gnuprivacygpg" "-openssl_base64" "openssl_sha1sum" "openssl_sha256sum" "openssl_sha512sum" "-base_64" "exit")
+hasher=("-AES" "-Arcfour" "-ARIA" "-base58" "-cast5" "-RSA" "-Rijndael" "-Serpent" "-Twofish" "-gnuprivacygpg" "-openssl_base64" "openssl_sha1sum" "openssl_sha256sum" "openssl_sha512sum" "-base_64" "exit")
 select hash in "${hasher[@]}"; do
 case $hash in
 "-AES")
@@ -42,6 +42,16 @@ echo -en '\n'
 "-ARIA")
 echo -en '\n'
 aria
+echo -en '\n'
+;;
+"-base58")
+echo -en '\n'
+base58
+echo -en '\n'
+;;
+"-cast5")
+echo -en '\n'
+cast5
 echo -en '\n'
 ;;
 "-RSA")
@@ -183,6 +193,52 @@ read -p $'\e[31mfile?: \e[0m' infile
 sudo openssl enc -d -k $passw -in $infile -aria-$keysize-$var0 -a -iter 20
 ;;
 "Main")
+clear
+main_menu
+;;
+esac
+done
+}
+base58() {
+PS3=("#b58: ")
+nossl58=("encrypt" "decrypt" "main")
+select nos in "{nossl58[@]}"; do
+case $nos in
+"encrypt")
+read -p $'\e[1;31mString?: \e[0m' encstr
+echo $encstr | base58
+;;
+"decrypt")
+read -p $'\e[1;31mString?: \e[0m' decstr
+echo $decstr | base58 -d
+;;
+"main")
+clear
+main_menu
+;;
+esac
+done
+}
+cast5() {
+PS3=("#cast5: ")
+sslcast5=("encrypt" "decrypt" "main")
+select sslc in "{sslcast5[@]}"; do
+case $sslc in
+"encrypt")
+read -p $'\e[1;31mString?: \e[0m' encstr
+echo -en '\n'
+read -p $'\e[1;31mcbc, cfb, ecb, ofb?: \e[0m' suffix
+echo -en '\n'
+echo $encstr | openssl cast5-$suffix
+;;
+"decrypt")
+read -p $'\e[1;31mString?: \e[0m' decstr
+echo -en '\n'
+read -p $'\e[1;31mcbc, cfb, ecb, ofb?: \e[0m' dsuffix
+echo -en '\n'
+echo $decstr | openssl cast5-$dsuffix
+;;
+"main")
 clear
 main_menu
 ;;
